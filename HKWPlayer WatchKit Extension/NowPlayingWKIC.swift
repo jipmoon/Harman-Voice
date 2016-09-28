@@ -13,7 +13,6 @@ var g_isPlaying = false
 
 class NowPlayingWKIC: WKInterfaceController {
     @IBOutlet weak var titleWKLabel: WKInterfaceLabel!
-    
     @IBOutlet weak var artistWKLabel: WKInterfaceLabel!
     
     @IBOutlet weak var playWKBtn: WKInterfaceButton!
@@ -92,14 +91,14 @@ class NowPlayingWKIC: WKInterfaceController {
     override func willActivate() {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
-        
+
     }
-    
+
     override func didDeactivate() {
         // This method is called when watch view controller is no longer visible
         super.didDeactivate()
     }
-    
+
     @IBAction func playPressed() {
         println("Play pressed")
         println("persistenID: \(playItem.item_persistentID)")
@@ -128,22 +127,22 @@ class NowPlayingWKIC: WKInterfaceController {
         }
     }
     
-    
+
     @IBAction func fastForwardPressed() {
         println("FF pressed")
-        
+
         timeElapsed = 0
         g_currentIndex++
         if g_currentIndex == g_playList.count {
             g_currentIndex = 0
         }
-        
+
         
         playItem = g_playList[g_currentIndex]
         configureUI(playItem)
-        
+
         playCurrentIndex()
-        
+
     }
     
     @IBAction func rewindPressed() {
@@ -161,7 +160,7 @@ class NowPlayingWKIC: WKInterfaceController {
         configureUI(playItem)
         
         playCurrentIndex()
-        
+
     }
     
     @IBAction func volumeChanged(value: Float) {
@@ -169,7 +168,7 @@ class NowPlayingWKIC: WKInterfaceController {
         volume = value
         WKInterfaceController.openParentApplication(["setVolume": NSNumber(float: value)], reply: {(reply, error) -> Void in
             if let eventCreated = reply["setVolume"] as? NSNumber {
-                
+
             }
         })
     }
@@ -238,9 +237,9 @@ class NowPlayingWKIC: WKInterfaceController {
             else if command == "turn on speaker one" {
                 let deviceId:String = "2-1:true"
                 WKInterfaceController.openParentApplication(["setActive": deviceId], reply: {(reply, error) -> Void in
-                    //                    if let eventCreated = reply["setActive"] as? NSNumber {
-                    //
-                    //                    }
+//                    if let eventCreated = reply["setActive"] as? NSNumber {
+//
+//                    }
                 })
             }
             else if command == "turn off speaker one" {
@@ -283,6 +282,30 @@ class NowPlayingWKIC: WKInterfaceController {
                     //                    }
                 })
             }
+            else if command == "play something relaxing" {
+                let parameters:String = ""
+                WKInterfaceController.openParentApplication(["playWater": parameters], reply: {(reply, error) -> Void in
+                    //                    if let eventCreated = reply["setActive"] as? NSNumber {
+                    //
+                    //                    }
+                })
+            }
+            else if command == "intruder" {
+                let parameters:String = ""
+                WKInterfaceController.openParentApplication(["playBark": parameters], reply: {(reply, error) -> Void in
+                    //                    if let eventCreated = reply["setActive"] as? NSNumber {
+                    //
+                    //                    }
+                })
+            }
+            else if command == "applause" {
+                let parameters:String = ""
+                WKInterfaceController.openParentApplication(["playApplause": parameters], reply: {(reply, error) -> Void in
+                    //                    if let eventCreated = reply["setActive"] as? NSNumber {
+                    //
+                    //                    }
+                })
+            }
             
         }
     }
@@ -300,5 +323,5 @@ class NowPlayingWKIC: WKInterfaceController {
             }
         })
     }
-    
+
 }

@@ -17,14 +17,13 @@ var g_playInitiatedByWatch = false
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, HKWDeviceEventHandlerDelegate, HKWPlayerEventHandlerDelegate {
-    
     var sleepPreventer : MMPDeepSleepPreventer!
-    
+
     var window: UIWindow?
     
     var deviceList: NSMutableArray!
-    
-    
+
+
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
         let defaults = NSUserDefaults(suiteName: kAppGroupName)
@@ -35,10 +34,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWDeviceEventHandlerDele
         sleepPreventer = MMPDeepSleepPreventer()
         sleepPreventer.startPreventSleep()
         
+        // TEST
+        var bundleRoot = NSBundle.mainBundle().bundlePath
+        var dirContents: NSArray = NSFileManager.defaultManager().contentsOfDirectoryAtPath(bundleRoot, error: nil)!
+        var fltr: NSPredicate = NSPredicate(format: "self ENDSWITH '.wav'")
+        var g_wavFiles = dirContents.filteredArrayUsingPredicate(fltr) as! [String]
+        println("WAV FILES: " + g_wavFiles[1])
+
         return true
     }
     
-    
+
     func application(application: UIApplication, handleWatchKitExtensionRequest userInfo: [NSObject : AnyObject]?, reply: (([NSObject : AnyObject]!) -> Void)!) {
         
         if !HKWControlHandler.sharedInstance().isInitialized() {
@@ -59,7 +65,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWDeviceEventHandlerDele
                 loadPlaylistItems()
             }
         }
-        
+
         
         var eventCreated = false
         if let persistentID = userInfo?["playItem"] as? String {
@@ -69,7 +75,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWDeviceEventHandlerDele
             let query = MPMediaQuery.songsQuery()
             
             let predicate = MPMediaPropertyPredicate(value: persistentID,
-                                                     forProperty: MPMediaItemPropertyPersistentID)
+                forProperty: MPMediaItemPropertyPersistentID)
             query.addFilterPredicate(predicate)
             let item = query.items.first as? MPMediaItem
             
@@ -97,7 +103,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWDeviceEventHandlerDele
             
             eventCreated = true
             reply(["playItem": NSNumber(bool: eventCreated)])
-            
+
         } else if let persistentID = userInfo?["resumeItem"] as? String {
             println("resumeItem: persistentID: \(persistentID)")
             
@@ -105,7 +111,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWDeviceEventHandlerDele
             let query = MPMediaQuery.songsQuery()
             
             let predicate = MPMediaPropertyPredicate(value: persistentID,
-                                                     forProperty: MPMediaItemPropertyPersistentID)
+                forProperty: MPMediaItemPropertyPersistentID)
             query.addFilterPredicate(predicate)
             let item = query.items.first as? MPMediaItem
             
@@ -119,7 +125,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWDeviceEventHandlerDele
             if HKWControlHandler.sharedInstance().playCAF(assetUrl, songName: item_title, resumeFlag: true) {
                 println("playing")
                 g_playInitiatedByWatch = true
-                
+
             } else {
                 println("error in playing")
             }
@@ -129,19 +135,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWDeviceEventHandlerDele
             
         }  else if let persistentID = userInfo?["pauseItem"] as? String {
             println("pauseItem: persistentID: \(persistentID)")
-            
+
             HKWControlHandler.sharedInstance().stop()
             eventCreated = true
             reply(["pauseItem": NSNumber(bool: eventCreated)])
             
         } else if let value = userInfo?["setVolume"] as? NSNumber {
             println("setVolume: value: \(value)")
-            
+
             var volume = value.floatValue
             HKWControlHandler.sharedInstance().setVolume(Int(volume))
             eventCreated = true
             reply(["setVolume": NSNumber(bool: eventCreated)])
-            
+
             
         } else if let str = userInfo?["setVolumeDevice"] as? String {
             println("setVolumeDevice: str: \(str)")
@@ -155,7 +161,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWDeviceEventHandlerDele
             
         } else if let value = userInfo?["getVolume"] as? NSNumber {
             println("getVolume: value: \(value)")
-            
+
             var volume = value.floatValue
             var newVolume = HKWControlHandler.sharedInstance().getVolume()
             eventCreated = true
@@ -187,7 +193,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWDeviceEventHandlerDele
                 HKWControlHandler.sharedInstance().addDeviceToSession(deviceId)
             } else {
                 HKWControlHandler.sharedInstance().removeDeviceFromSession(deviceId)
-                
+
             }
             eventCreated = true
             reply(["setActive": NSNumber(bool: eventCreated)])
@@ -199,10 +205,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWDeviceEventHandlerDele
             
         } else if let value = userInfo?["getSpeakerCount"] as? NSNumber {
             println("getSpeakerCount: value: \(value)")
-            
+
             var deviceCount = HKWControlHandler.sharedInstance().getDeviceCount()
             println("getSpeakerCount: return \(deviceCount)")
-            
+
             reply(["getSpeakerCount": NSNumber(integer: deviceCount)])
             
         } else if let value = userInfo?["getCurrentItem"] as? NSString {
@@ -219,17 +225,47 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWDeviceEventHandlerDele
             
         }  else if let value = userInfo?["getIsPlaying"] as? NSString {
             println("received getCurrentTitle")
-            
+
             println("return : \(HKWControlHandler.sharedInstance().isPlaying())")
-            
+
             reply(["getIsPlaying": NSNumber(bool: HKWControlHandler.sharedInstance().isPlaying())])
         }  else if let value = userInfo?["playBark"] as? NSString {
+
+            playSound("dog_bark.wav")
+            eventCreated = true
+            reply(["playBark": NSNumber(bool: eventCreated)])
+            
+        }  else if let value = userInfo?["playWater"] as? NSString {
+            
+            playSound("water.wav")
+            eventCreated = true
+            reply(["playWater": NSNumber(bool: eventCreated)])
+            
+        }  else if let value = userInfo?["playApplause"] as? NSString {
+            
+            playSound("applause.wav")
+            eventCreated = true
+            reply(["playApplause": NSNumber(bool: eventCreated)])
             
         }
-        
+
         
     }
     
+    func playSound(soundFile: String) {
+        
+        let wavFilePath = NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent(soundFile)
+        let assetUrl = NSURL(fileURLWithPath: wavFilePath)
+        
+        HKWControlHandler.sharedInstance().stop()
+        if HKWControlHandler.sharedInstance().playCAF(assetUrl, songName: soundFile, resumeFlag: false) {
+            println("playing")
+            g_playInitiatedByWatch = true
+        } else {
+            println("error in playing")
+        }
+    }
+
     func convertStringToCLongLong(deviceIDStr: String) -> CLongLong {
         let strAsNSString = deviceIDStr as NSString
         let deviceID = strAsNSString.longLongValue
@@ -240,46 +276,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWDeviceEventHandlerDele
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
         println("willResignActive")
-        
+
     }
-    
+
     func applicationDidEnterBackground(application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         
         println("didEnterBackground")
     }
-    
+
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     }
-    
+
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         println("didBecomeActive")
-        
+
     }
-    
+
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         
         // Saves changes in the application's managed object context before the application terminates.
         self.saveContext()
     }
-    
+
     // MARK: - Core Data stack
     
     lazy var applicationDocumentsDirectory: NSURL = {
         // The directory the application uses to store the Core Data store file. This code uses a directory named "com.savoritelist.Savorite" in the application's documents Application Support directory.
         let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
         return urls[urls.count-1] as! NSURL
-    }()
+        }()
     
     lazy var managedObjectModel: NSManagedObjectModel = {
         // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
         let modelURL = NSBundle.mainBundle().URLForResource("HKWPlayer", withExtension: "momd")!
         return NSManagedObjectModel(contentsOfURL: modelURL)!
-    }()
+        }()
     
     lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {
         // The persistent store coordinator for the application. This implementation creates and return a coordinator, having added the store for the application to it. This property is optional since there are legitimate error conditions that could cause the creation of the store to fail.
@@ -303,7 +339,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWDeviceEventHandlerDele
         }
         
         return coordinator
-    }()
+        }()
     
     lazy var managedObjectContext: NSManagedObjectContext? = {
         // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.) This property is optional since there are legitimate error conditions that could cause the creation of the context to fail.
@@ -314,7 +350,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWDeviceEventHandlerDele
         var managedObjectContext = NSManagedObjectContext()
         managedObjectContext.persistentStoreCoordinator = coordinator
         return managedObjectContext
-    }()
+        }()
     
     // MARK: - Core Data Saving support
     
@@ -329,10 +365,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWDeviceEventHandlerDele
             }
         }
     }
-    
-    
+
+
     func saveDeviceList() {
-        
+
         
         var deviceCount = HKWControlHandler.sharedInstance().getDeviceCount()
         
@@ -374,3 +410,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate, HKWDeviceEventHandlerDele
     }
     
 }
+
