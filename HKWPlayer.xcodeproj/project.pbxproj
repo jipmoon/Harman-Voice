@@ -462,6 +462,7 @@
 					765E2D841A809CA40044EE19 = {
 						CreatedOnToolsVersion = 6.1.1;
 						DevelopmentTeam = 5CLZ86DHD8;
+						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -473,11 +474,13 @@
 					};
 					765E2D9C1A809CA40044EE19 = {
 						CreatedOnToolsVersion = 6.1.1;
+						LastSwiftMigration = 0800;
 						TestTargetID = 765E2D841A809CA40044EE19;
 					};
 					76E7E2FA1AFB12E3007E93B2 = {
 						CreatedOnToolsVersion = 6.3.1;
 						DevelopmentTeam = 5CLZ86DHD8;
+						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -765,6 +768,7 @@
 				OTHER_LDFLAGS = "-lstdc++";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "e89f78bf-2538-4369-b564-068ac83e60d7";
+				SWIFT_VERSION = 3.0;
 				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Debug;
@@ -785,6 +789,7 @@
 				OTHER_LDFLAGS = "-lstdc++";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "e89f78bf-2538-4369-b564-068ac83e60d7";
+				SWIFT_VERSION = 3.0;
 				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Release;
@@ -805,6 +810,7 @@
 				INFOPLIST_FILE = HKWPlayerTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HKWPlayer.app/HKWPlayer";
 			};
 			name = Debug;
@@ -822,6 +828,7 @@
 				INFOPLIST_FILE = HKWPlayerTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HKWPlayer.app/HKWPlayer";
 			};
 			name = Release;
@@ -896,6 +903,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "HKWPlayer WatchKit Extension/HKWPlayer WatchKit Extension-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -922,6 +930,7 @@
 				PROVISIONING_PROFILE = "14fb0ae7-2a60-417a-baec-1d7be2008cd2";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "HKWPlayer WatchKit Extension/HKWPlayer WatchKit Extension-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
